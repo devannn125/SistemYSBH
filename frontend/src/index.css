@@ -112,6 +112,41 @@ textarea {
   resize: none !important;
 }
 
+/* Custom Styled Select: Eliminate browser-default OS arrow & apply SIMSBH Chevron */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%23586862'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem 1rem;
+  padding-right: 2.5rem !important;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+html.dark select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%238FA89B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+}
+
+/* Avoid duplicate chevron if component has its own Lucide icon */
+select.has-custom-chevron,
+.has-custom-chevron select {
+  background-image: none !important;
+}
+
+select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+select option {
+  background-color: #FFFFFF;
+  color: #14201A;
+  padding: 8px 12px;
+}
+
 /* Global Dark Mode Styles for Form Fields, Inputs & Buttons */
 html.dark input,
 html.dark select,

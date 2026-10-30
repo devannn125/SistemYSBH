@@ -3,6 +3,7 @@ import { api } from '../api/client';
 import { AppLayout } from '../components/layout/AppLayout';
 import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
+import { Select } from '../components/common/Select';
 import { ShieldAlert, Search, RefreshCw, History, User } from 'lucide-react';
 
 export function AuditTrail() {
@@ -67,22 +68,23 @@ export function AuditTrail() {
           </div>
 
           <div>
-            <select
+            <Select
               value={selectedAction}
               onChange={(e) => setSelectedAction(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-            >
-              <option value="">Semua Jenis Aksi</option>
-              <option value="login">Login Masuk</option>
-              <option value="logout">Logout Keluar</option>
-              <option value="reserve_letter_number">Cadangkan Nomor Surat</option>
-              <option value="void_letter_number">Batalkan Nomor Surat</option>
-              <option value="create_document">Buat Dokumen</option>
-              <option value="document_transition">Perubahan Status Dokumen</option>
-              <option value="create_employee">Tambah Karyawan</option>
-              <option value="clock_in">Presensi Masuk</option>
-              <option value="submit_logbook">Kirim Logbook</option>
-            </select>
+              placeholder="Semua Jenis Aksi"
+              options={[
+                { value: '', label: 'Semua Jenis Aksi' },
+                { value: 'login', label: 'Login Masuk' },
+                { value: 'logout', label: 'Logout Keluar' },
+                { value: 'reserve_letter_number', label: 'Cadangkan Nomor Surat' },
+                { value: 'void_letter_number', label: 'Batalkan Nomor Surat' },
+                { value: 'create_document', label: 'Buat Dokumen' },
+                { value: 'document_transition', label: 'Perubahan Status Dokumen' },
+                { value: 'create_employee', label: 'Tambah Karyawan' },
+                { value: 'clock_in', label: 'Presensi Masuk' },
+                { value: 'submit_logbook', label: 'Kirim Logbook' },
+              ]}
+            />
           </div>
         </div>
       </Card>

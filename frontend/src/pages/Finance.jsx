@@ -6,6 +6,7 @@ import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
 import { Modal } from '../components/common/Modal';
+import { Select } from '../components/common/Select';
 import { 
   Receipt, 
   Plus, 
@@ -345,21 +346,18 @@ export function Finance() {
       >
         <form onSubmit={handleCreateBudget} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1">
-                Pilih Kegiatan Program
-              </label>
-              <select
-                required
-                value={budgetActivityId}
-                onChange={(e) => setBudgetActivityId(e.target.value)}
-                className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white"
-              >
-                {activities.map((a) => (
-                  <option key={a.id} value={a.id}>{a.code} — {a.name}</option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Pilih Kegiatan Program"
+              required
+              value={budgetActivityId}
+              onChange={(e) => setBudgetActivityId(e.target.value)}
+              placeholder="-- Pilih Kegiatan --"
+              options={activities.map((a) => ({
+                value: a.id,
+                badge: a.code,
+                label: `${a.code} — ${a.name}`,
+              }))}
+            />
             <div>
               <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1">
                 Judul Dokumen RAB
@@ -370,7 +368,7 @@ export function Finance() {
                 placeholder="Misal: RAB Survei Entomologi Merauke Periode I"
                 value={budgetTitle}
                 onChange={(e) => setBudgetTitle(e.target.value)}
-                className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white placeholder-[#586862] dark:placeholder-[#6E8578]"
+                className="w-full h-10 px-3 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white placeholder-[#586862] dark:placeholder-[#6E8578] focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
               />
             </div>
           </div>
@@ -387,17 +385,18 @@ export function Finance() {
               {budgetItems.map((item, idx) => (
                 <div key={idx} className="p-2.5 rounded-[8px] border border-[#E3EAE5] bg-[#F7FAF8] grid grid-cols-12 gap-2 items-center text-xs">
                   <div className="col-span-3">
-                    <select
+                    <Select
+                      size="sm"
                       value={item.category}
                       onChange={(e) => updateBudgetItem(idx, 'category', e.target.value)}
-                      className="w-full p-1.5 bg-white border border-[#E3EAE5] rounded-[6px]"
-                    >
-                      <option value="transport">Transport</option>
-                      <option value="konsumsi">Konsumsi</option>
-                      <option value="honor">Honor / Upah</option>
-                      <option value="logistik">Logistik / Alat</option>
-                      <option value="operasional">Operasional</option>
-                    </select>
+                      options={[
+                        { value: 'transport', label: 'Transport' },
+                        { value: 'konsumsi', label: 'Konsumsi' },
+                        { value: 'honor', label: 'Honor / Upah' },
+                        { value: 'logistik', label: 'Logistik / Alat' },
+                        { value: 'operasional', label: 'Operasional' },
+                      ]}
+                    />
                   </div>
                   <div className="col-span-4">
                     <input
@@ -461,18 +460,17 @@ export function Finance() {
         subtitle="Pertanggungjawaban keuangan kegiatan"
       >
         <form onSubmit={handleCreateSPJ} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1">Kegiatan</label>
-            <select
-              value={spjActivityId}
-              onChange={(e) => setSpjActivityId(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white"
-            >
-              {activities.map((a) => (
-                <option key={a.id} value={a.id}>{a.code} — {a.name}</option>
-              ))}
-            </select>
-          </div>
+          <Select
+            label="Kegiatan"
+            value={spjActivityId}
+            onChange={(e) => setSpjActivityId(e.target.value)}
+            placeholder="-- Pilih Kegiatan --"
+            options={activities.map((a) => ({
+              value: a.id,
+              badge: a.code,
+              label: `${a.code} — ${a.name}`,
+            }))}
+          />
 
           <div>
             <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1">Judul Laporan Realisasi</label>

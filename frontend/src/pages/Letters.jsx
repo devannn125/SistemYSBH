@@ -6,6 +6,7 @@ import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
 import { Modal } from '../components/common/Modal';
+import { Select } from '../components/common/Select';
 import { 
   Hash, 
   Search, 
@@ -169,31 +170,33 @@ export function Letters() {
           </div>
 
           <div>
-            <select
+            <Select
               value={selectedClassification}
               onChange={(e) => setSelectedClassification(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-            >
-              <option value="">Semua Klasifikasi (Kode)</option>
-              {classifications.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.code} — {c.name}
-                </option>
-              ))}
-            </select>
+              placeholder="Semua Klasifikasi (Kode)"
+              options={[
+                { value: '', label: 'Semua Klasifikasi (Kode)' },
+                ...classifications.map((c) => ({
+                  value: c.id,
+                  badge: c.code,
+                  label: `${c.code} — ${c.name}`,
+                })),
+              ]}
+            />
           </div>
 
           <div>
-            <select
+            <Select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-            >
-              <option value="">Semua Status</option>
-              <option value="reserved">Dicadangkan (Reserved)</option>
-              <option value="issued">Terbit (Issued)</option>
-              <option value="void">Batal (Void)</option>
-            </select>
+              placeholder="Semua Status"
+              options={[
+                { value: '', label: 'Semua Status' },
+                { value: 'reserved', label: 'Dicadangkan (Reserved)' },
+                { value: 'issued', label: 'Terbit (Issued)' },
+                { value: 'void', label: 'Batal (Void)' },
+              ]}
+            />
           </div>
         </div>
       </Card>
@@ -343,23 +346,19 @@ export function Letters() {
           </div>
         ) : (
           <form onSubmit={handleRequestNumber} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1.5">
-                Klasifikasi Divisi / Jenis Surat
-              </label>
-              <select
-                required
-                value={requestClassificationId}
-                onChange={(e) => setRequestClassificationId(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-              >
-                {classifications.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.code} — {c.name} (Format: {c.format_template})
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Klasifikasi Divisi / Jenis Surat"
+              required
+              value={requestClassificationId}
+              onChange={(e) => setRequestClassificationId(e.target.value)}
+              placeholder="-- Pilih Klasifikasi Surat --"
+              options={classifications.map((c) => ({
+                value: c.id,
+                badge: c.code,
+                label: `${c.code} — ${c.name}`,
+                sublabel: `Contoh format: 001/YSBH/${c.code}/X/2026`,
+              }))}
+            />
 
             <div>
               <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1.5">

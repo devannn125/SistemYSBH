@@ -7,6 +7,7 @@ import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
 import { Modal } from '../components/common/Modal';
+import { Select } from '../components/common/Select';
 import { 
   FileText, 
   Search, 
@@ -216,34 +217,36 @@ export function Documents() {
           </div>
 
           <div>
-            <select
+            <Select
               value={selectedDivision}
               onChange={(e) => setSelectedDivision(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-            >
-              <option value="">Semua Bagian / Divisi</option>
-              <option value="HR">HR / Kepegawaian</option>
-              <option value="Keuangan">Keuangan</option>
-              <option value="Program">Program Malaria</option>
-              <option value="Direksi">Direksi</option>
-            </select>
+              placeholder="Semua Bagian / Divisi"
+              options={[
+                { value: '', label: 'Semua Bagian / Divisi' },
+                { value: 'HR', label: 'HR / Kepegawaian' },
+                { value: 'Keuangan', label: 'Keuangan' },
+                { value: 'Program', label: 'Program Malaria' },
+                { value: 'Direksi', label: 'Direksi' },
+              ]}
+            />
           </div>
 
           <div>
-            <select
+            <Select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-            >
-              <option value="">Semua Status Dokumen</option>
-              <option value="draft">Draf</option>
-              <option value="submitted">Diajukan</option>
-              <option value="in_review">Direview Manager</option>
-              <option value="pending_director">Menunggu Direktur</option>
-              <option value="approved">Disetujui</option>
-              <option value="revision_needed">Perlu Revisi</option>
-              <option value="rejected">Ditolak</option>
-            </select>
+              placeholder="Semua Status Dokumen"
+              options={[
+                { value: '', label: 'Semua Status Dokumen' },
+                { value: 'draft', label: 'Draf' },
+                { value: 'submitted', label: 'Diajukan' },
+                { value: 'in_review', label: 'Direview Manager' },
+                { value: 'pending_director', label: 'Menunggu Direktur' },
+                { value: 'approved', label: 'Disetujui' },
+                { value: 'revision_needed', label: 'Perlu Revisi' },
+                { value: 'rejected', label: 'Ditolak' },
+              ]}
+            />
           </div>
         </div>
       </Card>
@@ -368,57 +371,46 @@ export function Documents() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1.5">
-                Kategori Dokumen
-              </label>
-              <select
-                value={docCategory}
-                onChange={(e) => setDocCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-              >
-                <option value="surat_keluar">Surat Keluar</option>
-                <option value="rab">Rencana Anggaran (RAB)</option>
-                <option value="pertanggungjawaban">Pertanggungjawaban (SPJ)</option>
-                <option value="laporan_kegiatan">Laporan Kegiatan</option>
-                <option value="kebijakan">Kebijakan / SOP</option>
-              </select>
-            </div>
+            <Select
+              label="Kategori Dokumen"
+              value={docCategory}
+              onChange={(e) => setDocCategory(e.target.value)}
+              options={[
+                { value: 'surat_keluar', label: 'Surat Keluar' },
+                { value: 'rab', label: 'Rencana Anggaran (RAB)' },
+                { value: 'pertanggungjawaban', label: 'Pertanggungjawaban (SPJ)' },
+                { value: 'laporan_kegiatan', label: 'Laporan Kegiatan' },
+                { value: 'kebijakan', label: 'Kebijakan / SOP' },
+              ]}
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1.5">
-                Divisi Pemilik
-              </label>
-              <select
-                value={docDivision}
-                onChange={(e) => setDocDivision(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-              >
-                <option value="HR">HR</option>
-                <option value="Keuangan">Keuangan</option>
-                <option value="Program">Program Malaria</option>
-                <option value="Direksi">Direksi</option>
-              </select>
-            </div>
+            <Select
+              label="Divisi Pemilik"
+              value={docDivision}
+              onChange={(e) => setDocDivision(e.target.value)}
+              options={[
+                { value: 'HR', label: 'HR' },
+                { value: 'Keuangan', label: 'Keuangan' },
+                { value: 'Program', label: 'Program Malaria' },
+                { value: 'Direksi', label: 'Direksi' },
+              ]}
+            />
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1.5">
-              Sematkan Nomor Surat yang Sudah Dicadangkan (Opsional)
-            </label>
-            <select
-              value={docLetterNumberId}
-              onChange={(e) => setDocLetterNumberId(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-            >
-              <option value="">-- Tanpa Nomor Surat --</option>
-              {lettersReserved.map((l) => (
-                <option key={l.id} value={l.id}>
-                  {l.full_number} — {l.subject}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Select
+            label="Sematkan Nomor Surat yang Sudah Dicadangkan (Opsional)"
+            value={docLetterNumberId}
+            onChange={(e) => setDocLetterNumberId(e.target.value)}
+            placeholder="-- Tanpa Nomor Surat --"
+            options={[
+              { value: '', label: '-- Tanpa Nomor Surat --' },
+              ...lettersReserved.map((l) => ({
+                value: l.id,
+                label: l.full_number,
+                sublabel: l.subject,
+              })),
+            ]}
+          />
 
           <div>
             <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1.5">

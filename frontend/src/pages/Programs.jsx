@@ -6,6 +6,7 @@ import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
 import { Modal } from '../components/common/Modal';
+import { Select } from '../components/common/Select';
 import { 
   Activity, 
   MapPin, 
@@ -244,23 +245,19 @@ export function Programs() {
       >
         <form onSubmit={handleSubmitReport} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1">
-                Pilih Kegiatan yang Dilaksanakan
-              </label>
-              <select
-                required
-                value={selectedActivityId}
-                onChange={(e) => setSelectedActivityId(e.target.value)}
-                className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-              >
-                {activities.map((act) => (
-                  <option key={act.id} value={act.id}>
-                    {act.code} — {act.name} ({act.location})
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Pilih Kegiatan yang Dilaksanakan"
+              required
+              value={selectedActivityId}
+              onChange={(e) => setSelectedActivityId(e.target.value)}
+              placeholder="-- Pilih Kegiatan --"
+              options={activities.map((act) => ({
+                value: act.id,
+                badge: act.code,
+                label: `${act.code} — ${act.name}`,
+                sublabel: `Lokasi: ${act.location}`,
+              }))}
+            />
             <div>
               <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1">
                 Tanggal Pelaksanaan
@@ -358,19 +355,15 @@ export function Programs() {
         }
       >
         <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1.5">
-              Keputusan Verifikasi
-            </label>
-            <select
-              value={verifyStatus}
-              onChange={(e) => setVerifyStatus(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white"
-            >
-              <option value="verified">Diterima & Terverifikasi</option>
-              <option value="revision_needed">Perlu Perbaikan / Revisi</option>
-            </select>
-          </div>
+          <Select
+            label="Keputusan Verifikasi"
+            value={verifyStatus}
+            onChange={(e) => setVerifyStatus(e.target.value)}
+            options={[
+              { value: 'verified', label: 'Diterima & Terverifikasi' },
+              { value: 'revision_needed', label: 'Perlu Perbaikan / Revisi' },
+            ]}
+          />
           <div>
             <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1.5">
               Catatan Verifikasi (Umpan Balik Staf):

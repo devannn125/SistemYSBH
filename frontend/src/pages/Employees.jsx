@@ -6,6 +6,7 @@ import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
 import { Modal } from '../components/common/Modal';
+import { Select } from '../components/common/Select';
 import { 
   Users, 
   Search, 
@@ -174,18 +175,19 @@ export function Employees() {
           </div>
 
           <div>
-            <select
+            <Select
               value={selectedDivision}
               onChange={(e) => setSelectedDivision(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-            >
-              <option value="">Semua Divisi / Unit Kerja</option>
-              <option value="Direksi">Direksi</option>
-              <option value="HR">HR / Kepegawaian</option>
-              <option value="Keuangan">Keuangan</option>
-              <option value="Program">Program Malaria</option>
-              <option value="Lapangan">Staf Lapangan (Papua)</option>
-            </select>
+              placeholder="Semua Divisi / Unit Kerja"
+              options={[
+                { value: '', label: 'Semua Divisi / Unit Kerja' },
+                { value: 'Direksi', label: 'Direksi' },
+                { value: 'HR', label: 'HR / Kepegawaian' },
+                { value: 'Keuangan', label: 'Keuangan' },
+                { value: 'Program', label: 'Program Malaria' },
+                { value: 'Lapangan', label: 'Staf Lapangan (Papua)' },
+              ]}
+            />
           </div>
         </div>
       </Card>
@@ -369,40 +371,32 @@ export function Employees() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1">
-                Peran Sistem (Role)
-              </label>
-              <select
-                value={formData.role}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-              >
-                <option value="staf_lapangan">Staf Lapangan</option>
-                <option value="program_officer">Program Officer</option>
-                <option value="program_manager">Program Manager</option>
-                <option value="staf_hr">Staf HR</option>
-                <option value="hr_manager">HR Manager</option>
-                <option value="finance_manager">Finance Manager</option>
-                <option value="direktur">Direktur</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1">
-                Divisi / Bagian
-              </label>
-              <select
-                value={formData.division}
-                onChange={(e) => setFormData({ ...formData, division: e.target.value })}
-                className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-              >
-                <option value="Lapangan">Lapangan (Papua)</option>
-                <option value="Program">Program Malaria</option>
-                <option value="HR">HR</option>
-                <option value="Keuangan">Keuangan</option>
-                <option value="Direksi">Direksi</option>
-              </select>
-            </div>
+            <Select
+              label="Peran Sistem (Role)"
+              value={formData.role}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+              options={[
+                { value: 'staf_lapangan', label: 'Staf Lapangan' },
+                { value: 'program_officer', label: 'Program Officer' },
+                { value: 'program_manager', label: 'Program Manager' },
+                { value: 'staf_hr', label: 'Staf HR' },
+                { value: 'hr_manager', label: 'HR Manager' },
+                { value: 'finance_manager', label: 'Finance Manager' },
+                { value: 'direktur', label: 'Direktur' },
+              ]}
+            />
+            <Select
+              label="Divisi / Bagian"
+              value={formData.division}
+              onChange={(e) => setFormData({ ...formData, division: e.target.value })}
+              options={[
+                { value: 'Lapangan', label: 'Lapangan (Papua)' },
+                { value: 'Program', label: 'Program Malaria' },
+                { value: 'HR', label: 'HR' },
+                { value: 'Keuangan', label: 'Keuangan' },
+                { value: 'Direksi', label: 'Direksi' },
+              ]}
+            />
             <div>
               <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1">
                 Nama Jabatan
@@ -412,26 +406,22 @@ export function Employees() {
                 required
                 value={formData.position}
                 onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
+                className="w-full h-10 px-3 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-[#E3EAE5] dark:border-[#22332A]">
-            <div>
-              <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1">
-                Jenis Kontrak
-              </label>
-              <select
-                value={formData.contract_type}
-                onChange={(e) => setFormData({ ...formData, contract_type: e.target.value })}
-                className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-              >
-                <option value="PKWT">PKWT (Kontrak Tertentu)</option>
-                <option value="PKWTT">PKWTT (Tetap)</option>
-                <option value="Konsultan">Konsultan Ahli</option>
-              </select>
-            </div>
+            <Select
+              label="Jenis Kontrak"
+              value={formData.contract_type}
+              onChange={(e) => setFormData({ ...formData, contract_type: e.target.value })}
+              options={[
+                { value: 'PKWT', label: 'PKWT (Kontrak Tertentu)' },
+                { value: 'PKWTT', label: 'PKWTT (Tetap)' },
+                { value: 'Konsultan', label: 'Konsultan Ahli' },
+              ]}
+            />
             <div>
               <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1">
                 Tanggal Mulai Kerja
