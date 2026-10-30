@@ -1,111 +1,177 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@import "tailwindcss";
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+@custom-variant dark (&:where(.dark, .dark *));
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@theme {
+  --color-brand: #15803D;
+  --color-brand-hover: #166534;
+  --color-brand-soft: #F0FDF4;
+  --color-brand-accent: #DCFCE7;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --color-surface-page: #F7FAF8;
+  --color-surface-card: #FFFFFF;
+  --color-surface-border: #E3EAE5;
+
+  --color-ink-primary: #14201A;
+  --color-ink-secondary: #586862;
+
+  --color-semantic-success: #16A34A;
+  --color-semantic-warning: #D97706;
+  --color-semantic-danger: #DC2626;
+  --color-semantic-info: #0284C7;
+
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-simsbh: 10px;
+  --shadow-soft: 0 2px 4px rgba(20, 32, 26, 0.03);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+:root {
+  color-scheme: light;
+}
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+html.dark {
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
+  background-color: #F7FAF8;
+  color: #14201A;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+html.dark body {
+  background-color: #0E1712;
+  color: #EDF7F1;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+/* Typography Enhancements for Dark Mode */
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6 {
+  color: #FFFFFF;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+html.dark strong,
+html.dark b {
+  color: #FFFFFF;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
+/* Fallback color adaptation for primary & secondary text in dark mode */
+html.dark [class*="text-[#14201A]"]:not([class*="dark:text-"]) {
+  color: #EDF7F1 !important;
+}
+
+html.dark [class*="text-[#586862]"]:not([class*="dark:text-"]) {
+  color: #8FA89B !important;
+}
+
+/* Custom background patterns */
+.bg-grid-pattern {
+  background-size: 28px 28px;
+  background-image: 
+    linear-gradient(to right, rgba(227, 234, 229, 0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(227, 234, 229, 0.45) 1px, transparent 1px);
+}
+
+html.dark .bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(34, 51, 42, 0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34, 51, 42, 0.45) 1px, transparent 1px);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
   border-radius: 4px;
-  color: var(--text-h);
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #23382C;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* Static textareas: prevent manual resizing across the system */
+textarea {
+  resize: none !important;
+}
+
+/* Global Dark Mode Styles for Form Fields, Inputs & Buttons */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #192821 !important;
+  border-color: #2A3F33 !important;
+  color: #EDF7F1 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #6E8578 !important;
+}
+
+html.dark select option {
+  background-color: #192821 !important;
+  color: #EDF7F1 !important;
+}
+
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  border-color: #22C55E !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25) !important;
+}
+
+html.dark input[type="file"]::file-selector-button {
+  background-color: rgba(21, 128, 61, 0.25) !important;
+  color: #4ADE80 !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+}
+
+html.dark input[type="checkbox"],
+html.dark input[type="radio"] {
+  background-color: #192821 !important;
+  border-color: #2A3F33 !important;
+  accent-color: #16A34A !important;
+}
+
+html.dark label {
+  color: #EDF7F1;
+}
+
+/* Global Dark Mode Styles for Tables */
+html.dark thead {
+  background-color: #192821 !important;
+  border-color: #22332A !important;
+  color: #8FA89B !important;
+}
+
+html.dark th {
+  color: #8FA89B !important;
+  border-color: #22332A !important;
+}
+
+html.dark td {
+  border-color: #22332A !important;
+}
+
+html.dark tbody tr:hover {
+  background-color: rgba(25, 40, 33, 0.45) !important;
 }
