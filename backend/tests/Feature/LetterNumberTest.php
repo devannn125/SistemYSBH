@@ -26,9 +26,10 @@ class LetterNumberTest extends TestCase
         $letter2 = $service->generateNumber($classification->id, 2026, $user->id, 'Surat Tugas B');
         $letter3 = $service->generateNumber($classification->id, 2026, $user->id, 'Surat Tugas C');
 
-        $this->assertEquals('001/YSBH/HR/X/2026', $letter1->full_number);
-        $this->assertEquals('002/YSBH/HR/X/2026', $letter2->full_number);
-        $this->assertEquals('003/YSBH/HR/X/2026', $letter3->full_number);
+        $romanMonth = LetterNumberService::romanMonth((int) date('n'));
+        $this->assertEquals("001/YSBH/HR/{$romanMonth}/2026", $letter1->full_number);
+        $this->assertEquals("002/YSBH/HR/{$romanMonth}/2026", $letter2->full_number);
+        $this->assertEquals("003/YSBH/HR/{$romanMonth}/2026", $letter3->full_number);
 
         $this->assertEquals('reserved', $letter1->status);
 
@@ -39,7 +40,7 @@ class LetterNumberTest extends TestCase
 
         // Next letter should continue sequence (004), never reusing 002
         $letter4 = $service->generateNumber($classification->id, 2026, $user->id, 'Surat Tugas D');
-        $this->assertEquals('004/YSBH/HR/X/2026', $letter4->full_number);
+        $this->assertEquals("004/YSBH/HR/{$romanMonth}/2026", $letter4->full_number);
     }
 }
 

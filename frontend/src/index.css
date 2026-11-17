@@ -3,28 +3,30 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-brand: #15803D;
-  --color-brand-hover: #166534;
-  --color-brand-soft: #F0FDF4;
-  --color-brand-accent: #DCFCE7;
+  --color-brand: #059669;
+  --color-brand-hover: #047857;
+  --color-brand-soft: #ECFDF5;
+  --color-brand-accent: #D1FAE5;
 
-  --color-surface-page: #F7FAF8;
+  --color-surface-page: #F2F2F7;
   --color-surface-card: #FFFFFF;
-  --color-surface-border: #E3EAE5;
+  --color-surface-border: rgba(0, 0, 0, 0.06);
 
-  --color-ink-primary: #14201A;
-  --color-ink-secondary: #586862;
+  --color-ink-primary: #1C1C1E;
+  --color-ink-secondary: #8E8E93;
 
-  --color-semantic-success: #16A34A;
-  --color-semantic-warning: #D97706;
-  --color-semantic-danger: #DC2626;
-  --color-semantic-info: #0284C7;
+  --color-semantic-success: #34C759;
+  --color-semantic-warning: #FF9500;
+  --color-semantic-danger: #FF3B30;
+  --color-semantic-info: #007AFF;
 
-  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Inter", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
 
-  --radius-simsbh: 10px;
-  --shadow-soft: 0 2px 4px rgba(20, 32, 26, 0.03);
+  --radius-ios-sm: 10px;
+  --radius-ios-md: 16px;
+  --radius-ios-lg: 24px;
+  --radius-ios-xl: 32px;
 }
 
 :root {
@@ -39,18 +41,55 @@ html.dark {
 }
 
 body {
-  background-color: #F7FAF8;
-  color: #14201A;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #F2F2F7;
+  color: #1C1C1E;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Inter", sans-serif;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html.dark body {
-  background-color: #0E1712;
-  color: #EDF7F1;
+  background-color: #000000;
+  color: #F5F5F7;
+}
+
+/* iOS Glassmorphism Classes */
+.ios-glass {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+html.dark .ios-glass {
+  background: rgba(28, 28, 30, 0.82);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ios-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.dark .ios-card {
+  background: #1C1C1E;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* iOS Touch Click Spring */
+.ios-press {
+  transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.15s ease;
+}
+.ios-press:active {
+  transform: scale(0.975);
 }
 
 /* Typography Enhancements for Dark Mode */
@@ -69,144 +108,28 @@ html.dark b {
 }
 
 /* Fallback color adaptation for primary & secondary text in dark mode */
-html.dark [class*="text-[#14201A]"]:not([class*="dark:text-"]) {
-  color: #EDF7F1 !important;
+html.dark [class*="text-[#14201A]"]:not([class*="dark:text-"]),
+html.dark [class*="text-[#1C1C1E]"]:not([class*="dark:text-"]) {
+  color: #F5F5F7 !important;
 }
 
-html.dark [class*="text-[#586862]"]:not([class*="dark:text-"]) {
-  color: #8FA89B !important;
+html.dark [class*="text-[#586862]"]:not([class*="dark:text-"]),
+html.dark [class*="text-[#8E8E93]"]:not([class*="dark:text-"]) {
+  color: #98989D !important;
 }
 
-/* Custom background patterns */
-.bg-grid-pattern {
-  background-size: 28px 28px;
-  background-image: 
-    linear-gradient(to right, rgba(227, 234, 229, 0.45) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(227, 234, 229, 0.45) 1px, transparent 1px);
-}
-
-html.dark .bg-grid-pattern {
-  background-image: 
-    linear-gradient(to right, rgba(34, 51, 42, 0.45) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(34, 51, 42, 0.45) 1px, transparent 1px);
-}
-
-/* Custom scrollbar */
+/* Smooth custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 9999px;
 }
 html.dark ::-webkit-scrollbar-thumb {
-  background: #23382C;
-}
-
-/* Static textareas: prevent manual resizing across the system */
-textarea {
-  resize: none !important;
-}
-
-/* Custom Styled Select: Eliminate browser-default OS arrow & apply SIMSBH Chevron */
-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%23586862'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1rem 1rem;
-  padding-right: 2.5rem !important;
-  cursor: pointer;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-html.dark select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%238FA89B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
-}
-
-/* Avoid duplicate chevron if component has its own Lucide icon */
-select.has-custom-chevron,
-.has-custom-chevron select {
-  background-image: none !important;
-}
-
-select:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-select option {
-  background-color: #FFFFFF;
-  color: #14201A;
-  padding: 8px 12px;
-}
-
-/* Global Dark Mode Styles for Form Fields, Inputs & Buttons */
-html.dark input,
-html.dark select,
-html.dark textarea {
-  background-color: #192821 !important;
-  border-color: #2A3F33 !important;
-  color: #EDF7F1 !important;
-}
-
-html.dark input::placeholder,
-html.dark textarea::placeholder {
-  color: #6E8578 !important;
-}
-
-html.dark select option {
-  background-color: #192821 !important;
-  color: #EDF7F1 !important;
-}
-
-html.dark input:focus,
-html.dark select:focus,
-html.dark textarea:focus {
-  border-color: #22C55E !important;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25) !important;
-}
-
-html.dark input[type="file"]::file-selector-button {
-  background-color: rgba(21, 128, 61, 0.25) !important;
-  color: #4ADE80 !important;
-  border: 1px solid rgba(34, 197, 94, 0.3) !important;
-}
-
-html.dark input[type="checkbox"],
-html.dark input[type="radio"] {
-  background-color: #192821 !important;
-  border-color: #2A3F33 !important;
-  accent-color: #16A34A !important;
-}
-
-html.dark label {
-  color: #EDF7F1;
-}
-
-/* Global Dark Mode Styles for Tables */
-html.dark thead {
-  background-color: #192821 !important;
-  border-color: #22332A !important;
-  color: #8FA89B !important;
-}
-
-html.dark th {
-  color: #8FA89B !important;
-  border-color: #22332A !important;
-}
-
-html.dark td {
-  border-color: #22332A !important;
-}
-
-html.dark tbody tr:hover {
-  background-color: rgba(25, 40, 33, 0.45) !important;
+  background: rgba(255, 255, 255, 0.2);
 }

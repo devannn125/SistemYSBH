@@ -122,8 +122,8 @@ class FinanceController extends Controller
         $user = $request->user();
         $query = Payroll::with(['employee.user'])->orderBy('period_year', 'desc')->orderBy('period_month', 'desc');
 
-        // FR-FIN-06: Hanya Finance Manager, Direktur, dan pemilik akun yang dapat melihat
-        if (!$user->hasRole(['direktur', 'finance_manager'])) {
+        // FR-FIN-06: Hanya Finance Manager, Direktur, Superadmin, dan pemilik akun yang dapat melihat
+        if (!$user->hasRole(['direktur', 'finance_manager', 'superadmin'])) {
             $employeeId = $user->employee?->id;
             if (!$employeeId) {
                 return response()->json([]);

@@ -15,7 +15,11 @@ class SeederTest extends TestCase
     {
         $this->seed(DatabaseSeeder::class);
 
-        $this->assertEquals(7, User::count());
+        $this->assertEquals(8, User::count());
+
+        $superadmin = User::where('username', 'superadmin')->first();
+        $this->assertNotNull($superadmin);
+        $this->assertTrue($superadmin->hasRole('superadmin'));
 
         $kadek = User::where('username', 'kadek')->first();
         $this->assertNotNull($kadek);

@@ -16,15 +16,24 @@ class Logbook extends Model
         'challenges',
         'next_day_plan',
         'status',
+        'reviewed_by',
+        'feedback',
+        'reviewed_at',
     ];
 
     protected $casts = [
         'date' => 'date',
+        'reviewed_at' => 'datetime',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function reviewer()
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
     }
 
     public function attachments()

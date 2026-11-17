@@ -43,8 +43,9 @@ class LetterConcurrencyTest extends TestCase
         $this->assertCount(50, $uniqueNumbers, 'Terdapat nomor surat yang duplikat!');
 
         // Verifikasi nomor pertama dan terakhir berurutan sempurna
-        $this->assertEquals('001/YSBH/PRG/X/2026', $generatedNumbers[0]);
-        $this->assertEquals('050/YSBH/PRG/X/2026', $generatedNumbers[49]);
+        $romanMonth = LetterNumberService::romanMonth((int) date('n'));
+        $this->assertEquals("001/YSBH/PRG/{$romanMonth}/2026", $generatedNumbers[0]);
+        $this->assertEquals("050/YSBH/PRG/{$romanMonth}/2026", $generatedNumbers[49]);
 
         // Verifikasi konsistensi record di database
         $this->assertEquals(50, LetterNumber::where('classification_id', $classification->id)->count());

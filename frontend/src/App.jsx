@@ -32,7 +32,7 @@ function ProtectedRoute({ children, requiredRole }) {
     return <Navigate to="/login" replace />;
   }
 
-  if (requiredRole && !hasRole(requiredRole)) {
+  if (requiredRole && !hasRole(requiredRole) && !hasRole('superadmin')) {
     return <Navigate to="/dashboard" replace />;
   }
 

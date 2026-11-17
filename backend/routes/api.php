@@ -47,6 +47,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 
     // Attendance (FR-ABS)
+    Route::get('/attendances/schedule', [AttendanceController::class, 'getSchedule']);
+    Route::post('/attendances/schedule', [AttendanceController::class, 'updateSchedule']);
     Route::get('/attendances/today', [AttendanceController::class, 'today']);
     Route::post('/attendances/clock-in', [AttendanceController::class, 'clockIn']);
     Route::post('/attendances/clock-out', [AttendanceController::class, 'clockOut']);
@@ -56,6 +58,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/logbooks', [LogbookController::class, 'index']);
     Route::post('/logbooks', [LogbookController::class, 'store']);
     Route::get('/logbooks/missing-today', [LogbookController::class, 'missingToday']);
+    Route::get('/logbooks/{id}', [LogbookController::class, 'show']);
+    Route::post('/logbooks/{id}/review', [LogbookController::class, 'review']);
 
     // Programs & Field Reports (FR-PRG)
     Route::get('/programs', [ProgramController::class, 'index']);

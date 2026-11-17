@@ -115,4 +115,59 @@ class LogbookController extends Controller
             'users' => $missingUsers,
         ]);
     }
+
+    /**
+     * Tampilkan detail lengkap logbook (FR-LOG)
+     */
+    public function show(Request $request, $id): JsonResponse
+    {
+        $user = $request->user();
+        $logbook = Logbook::with(['user.employee', 'reviewer', 'attachments'])->findOrFail($id);
+
+        // Jika bukan Direktur/HR/Program Manager, pastikan hanya melihat miliknya
+        if ($user->hasRole(['staf_lapangan', 'staf_hr', 'program_officer']) && $logbook->user_id !== $user->id) {
+            return response()->json(['message' => 'Anda tidak memiliki akses melihat logbook ini.'], 403);
+        }
+
+        return response()->json([
+            'data' => $logbook,
+        ]);
+    }
+
+    /**
+     * Review / Persetujuan Logbook oleh Direktur atau Manager (FR-LOG)
+     */
+    public function review(Request $request, $id): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user->hasRole(['direktur', 'program_manager', 'superadmin'])) {
+            return response()->json(['message' => 'Hanya Direktur atau Program Manager yang dapat mereview logbook.'], 403);
+        }
+
+        $request->validate([
+            'feedback' => 'nullable|string',
+            'status' => 'nullable|string|in:submitted,reviewed,approved',
+        ]);
+
+        $logbook = Logbook::with('user')->findOrFail($id);
+        $newStatus = $request->status ?: 'approved';
+
+        $logbook->update([
+            'reviewed_by' => $user->id,
+            'reviewed_at' => Carbon::now(),
+            'feedback' => $request->feedback ?: 'Logbook telah ditinjau dan diverifikasi oleh Direktur.',
+            'status' => $newStatus,
+        ]);
+
+        AuditLog::record(
+            'review_logbook',
+            "{$user->name} mereview dan menyetujui logbook {$logbook->user->name} tanggal {$logbook->date->toDateString()}",
+            $logbook
+        );
+
+        return response()->json([
+            'message' => 'Logbook berhasil ditinjau dan diverifikasi.',
+            'data' => $logbook->load(['user.employee', 'reviewer', 'attachments']),
+        ]);
+    }
 }

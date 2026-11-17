@@ -18,16 +18,13 @@ import {
   Menu, 
   X, 
   ChevronRight,
-  Clock,
   Sun,
   Moon,
-  Sparkles,
   ShieldCheck,
   KeyRound,
-  Eye,
-  EyeOff,
-  AlertCircle,
-  CheckCircle2
+  CheckCircle2,
+  Sparkles,
+  Layers
 } from 'lucide-react';
 
 export function AppLayout({ 
@@ -48,8 +45,6 @@ export function AppLayout({
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirmation, setNewPasswordConfirmation] = useState('');
-  const [showCurrentPass, setShowCurrentPass] = useState(false);
-  const [showNewPass, setShowNewPass] = useState(false);
   const [changePasswordLoading, setChangePasswordLoading] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
@@ -149,13 +144,13 @@ export function AppLayout({
           label: 'Kepegawaian (HR)',
           path: '/employees',
           icon: Users,
-          show: hasRole('direktur') || hasRole('hr_manager') || hasRole('staf_hr') || hasRole('finance_manager'),
+          show: hasRole('superadmin') || hasRole('direktur') || hasRole('hr_manager') || hasRole('staf_hr') || hasRole('finance_manager'),
         },
         {
           label: 'Keuangan & RAB',
           path: '/finance',
           icon: Receipt,
-          show: hasRole('direktur') || hasRole('finance_manager') || hasRole('program_manager'),
+          show: hasRole('superadmin') || hasRole('direktur') || hasRole('finance_manager') || hasRole('program_manager'),
         },
       ],
     },
@@ -166,7 +161,7 @@ export function AppLayout({
           label: 'Jejak Audit',
           path: '/audit-trail',
           icon: ShieldAlert,
-          show: hasRole('direktur'),
+          show: hasRole('superadmin') || hasRole('direktur'),
         },
       ],
     },
@@ -184,6 +179,7 @@ export function AppLayout({
 
   const getRoleDisplayName = (role) => {
     const map = {
+      superadmin: 'Super Administrator',
       direktur: 'Direktur Eksekutif',
       hr_manager: 'HR Manager',
       staf_hr: 'Staf HR',
@@ -197,21 +193,30 @@ export function AppLayout({
 
   const primaryRole = user?.roles?.[0] || 'Pengguna';
 
+  // Bottom navigation items for phone
+  const mobileBottomItems = [
+    { label: 'Dasbor', path: '/dashboard', icon: LayoutDashboard },
+    { label: 'Surat', path: '/letters', icon: Hash },
+    { label: 'Presensi', path: '/attendance-logbook', icon: CalendarCheck },
+    { label: 'Program', path: '/programs', icon: Activity },
+    { label: 'Menu', action: () => setMobileMenuOpen(true), icon: Menu },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#F7FAF8] dark:bg-[#0E1712] text-[#14201A] dark:text-[#EDF7F1] flex transition-colors duration-200">
-      {/* Desktop Sidebar (256px fixed) */}
-      <aside className="hidden md:flex flex-col w-64 bg-white dark:bg-[#14201A] border-r border-[#E3EAE5] dark:border-[#22332A] shrink-0 fixed inset-y-0 z-30 transition-colors duration-200">
+    <div className="min-h-screen bg-[#F2F2F7] dark:bg-[#000000] text-[#1C1C1E] dark:text-[#F5F5F7] flex transition-colors duration-250 font-sans">
+      {/* Desktop Sidebar (256px iOS Glassmorphism) */}
+      <aside className="hidden md:flex flex-col w-64 bg-white/80 dark:bg-[#1C1C1E]/80 backdrop-blur-2xl border-r border-black/[0.06] dark:border-white/[0.08] shrink-0 fixed inset-y-0 z-30 transition-colors">
         {/* Brand Header */}
-        <Link to="/dashboard" className="h-16 px-6 border-b border-[#E3EAE5] dark:border-[#22332A] flex items-center gap-3 hover:bg-[#F7FAF8] dark:hover:bg-[#1A2A22] transition-colors">
-          <div className="w-9 h-9 rounded-[10px] bg-[#15803D] flex items-center justify-center text-white font-bold text-sm shadow-xs">
+        <Link to="/dashboard" className="h-16 px-6 border-b border-black/[0.05] dark:border-white/[0.06] flex items-center gap-3 hover:bg-black/[0.02] dark:hover:bg-white/[0.03] transition-colors ios-press">
+          <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-[#047857] to-[#10B981] flex items-center justify-center text-white font-bold text-sm shadow-md shadow-[#059669]/20">
             SBH
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <h1 className="text-base font-bold text-[#14201A] dark:text-white tracking-tight leading-none">SIMSBH</h1>
-              <span className="text-[10px] font-semibold text-[#15803D] dark:text-[#4ADE80] bg-[#DCFCE7] dark:bg-[#15803D]/30 px-1.5 py-0.2 rounded-full">v1.0</span>
+              <h1 className="text-base font-bold text-[#1C1C1E] dark:text-white tracking-tight leading-none">SIMSBH</h1>
+              <span className="text-[10px] font-semibold text-[#059669] dark:text-[#34D399] bg-[#ECFDF5] dark:bg-[#059669]/30 px-2 py-0.5 rounded-full">v1.2</span>
             </div>
-            <p className="text-[11px] text-[#586862] dark:text-[#8FA89B] font-medium tracking-wide mt-1">Sinar Bhakti Husada</p>
+            <p className="text-[11px] text-[#8E8E93] dark:text-[#98989D] font-medium tracking-wide mt-1">Sinar Bhakti Husada</p>
           </div>
         </Link>
 
@@ -223,7 +228,7 @@ export function AppLayout({
 
             return (
               <div key={gIdx} className="space-y-1">
-                <div className="text-[10px] font-bold text-[#586862] dark:text-[#8FA89B] uppercase tracking-wider px-3 pb-1">
+                <div className="text-[10px] font-semibold text-[#8E8E93] dark:text-[#98989D] uppercase tracking-wider px-3 pb-1">
                   {group.groupTitle}
                 </div>
                 {visibleItems.map((item) => {
@@ -233,13 +238,13 @@ export function AppLayout({
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-[10px] text-xs sm:text-sm font-medium transition-colors ${
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs sm:text-sm font-medium transition-all duration-150 ios-press ${
                         active
-                          ? 'bg-[#DCFCE7] dark:bg-[#15803D]/25 text-[#15803D] dark:text-[#4ADE80] font-semibold'
-                          : 'text-[#586862] dark:text-[#8FA89B] hover:bg-[#F0FDF4] dark:hover:bg-[#1A2A22] hover:text-[#15803D] dark:hover:text-[#4ADE80]'
+                          ? 'bg-[#059669] text-white shadow-sm shadow-[#059669]/30 font-semibold'
+                          : 'text-[#8E8E93] dark:text-[#98989D] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-[#1C1C1E] dark:hover:text-[#F5F5F7]'
                       }`}
                     >
-                      <Icon className="w-4 h-4 shrink-0" strokeWidth={1.75} />
+                      <Icon className="w-4 h-4 shrink-0" strokeWidth={active ? 2.2 : 1.75} />
                       <span className="truncate">{item.label}</span>
                     </Link>
                   );
@@ -249,16 +254,16 @@ export function AppLayout({
           })}
         </nav>
 
-        {/* User Identity Pill & Logout */}
-        <div className="p-3 border-t border-[#E3EAE5] dark:border-[#22332A] bg-[#F7FAF8]/60 dark:bg-[#0E1712]/60">
-          <div className="p-2.5 rounded-[10px] bg-white dark:bg-[#192821] border border-[#E3EAE5] dark:border-[#22332A] flex items-center justify-between shadow-xs">
+        {/* User Identity Pill & Controls */}
+        <div className="p-3 border-t border-black/[0.05] dark:border-white/[0.06]">
+          <div className="p-2.5 rounded-2xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/[0.04] dark:border-white/[0.06] flex items-center justify-between shadow-xs">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-[#DCFCE7] dark:bg-[#15803D]/30 text-[#15803D] dark:text-[#4ADE80] font-bold text-xs flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-full bg-[#ECFDF5] dark:bg-[#059669]/30 text-[#059669] dark:text-[#34D399] font-bold text-xs flex items-center justify-center shrink-0">
                 {getInitials(user?.name)}
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-semibold text-[#14201A] dark:text-white truncate">{user?.name}</p>
-                <p className="text-[10px] text-[#586862] dark:text-[#8FA89B] truncate">{getRoleDisplayName(primaryRole)}</p>
+                <p className="text-xs font-semibold text-[#1C1C1E] dark:text-white truncate">{user?.name}</p>
+                <p className="text-[10px] text-[#8E8E93] dark:text-[#98989D] truncate">{getRoleDisplayName(primaryRole)}</p>
               </div>
             </div>
             <div className="flex items-center gap-1">
@@ -269,46 +274,52 @@ export function AppLayout({
                   setChangePasswordOpen(true);
                 }}
                 title="Ubah Kata Sandi Saya"
-                className="p-1.5 rounded-[8px] text-[#586862] dark:text-[#8FA89B] hover:text-[#15803D] dark:hover:text-[#4ADE80] hover:bg-[#F0FDF4] dark:hover:bg-[#1A2A22] transition-colors cursor-pointer"
+                className="p-1.5 rounded-xl text-[#8E8E93] hover:text-[#059669] dark:hover:text-[#34D399] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors ios-press cursor-pointer"
               >
-                <KeyRound className="w-4 h-4" strokeWidth={1.75} />
+                <KeyRound className="w-4 h-4" strokeWidth={1.8} />
               </button>
               <button
                 onClick={logout}
                 title="Keluar dari sistem"
-                className="p-1.5 rounded-[8px] text-[#586862] dark:text-[#8FA89B] hover:text-[#DC2626] hover:bg-[#FEE2E2] dark:hover:bg-[#DC2626]/20 transition-colors cursor-pointer"
+                className="p-1.5 rounded-xl text-[#8E8E93] hover:text-[#FF3B30] hover:bg-[#FF3B30]/10 transition-colors ios-press cursor-pointer"
               >
-                <LogOut className="w-4 h-4" strokeWidth={1.75} />
+                <LogOut className="w-4 h-4" strokeWidth={1.8} />
               </button>
             </div>
           </div>
         </div>
       </aside>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer (Slide-Over Sheet) */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex">
-          <div className="fixed inset-0 bg-[#14201A]/60 backdrop-blur-xs" onClick={() => setMobileMenuOpen(false)} />
-          <div className="relative w-72 bg-white dark:bg-[#14201A] flex flex-col z-10 animate-in slide-in-from-left duration-200 border-r border-[#E3EAE5] dark:border-[#22332A]">
-            <div className="h-16 px-6 border-b border-[#E3EAE5] dark:border-[#22332A] flex items-center justify-between">
+        <div className="fixed inset-0 z-50 md:hidden flex animate-in fade-in duration-200">
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
+          <div className="relative w-80 bg-white/95 dark:bg-[#1C1C1E]/95 backdrop-blur-2xl flex flex-col z-10 animate-in slide-in-from-left duration-300 border-r border-black/[0.06] dark:border-white/[0.08] shadow-2xl">
+            <div className="h-16 px-6 border-b border-black/[0.05] dark:border-white/[0.06] flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-[10px] bg-[#15803D] flex items-center justify-center text-white font-bold text-xs">
+                <div className="w-8 h-8 rounded-2xl bg-gradient-to-tr from-[#047857] to-[#10B981] flex items-center justify-center text-white font-bold text-xs">
                   SBH
                 </div>
-                <h1 className="text-base font-bold text-[#14201A] dark:text-white">SIMSBH</h1>
+                <div>
+                  <h1 className="text-sm font-bold text-[#1C1C1E] dark:text-white leading-tight">SIMSBH</h1>
+                  <p className="text-[10px] text-[#8E8E93]">Sinar Bhakti Husada</p>
+                </div>
               </div>
-              <button onClick={() => setMobileMenuOpen(false)} className="p-1 text-[#586862] dark:text-[#8FA89B]">
-                <X className="w-5 h-5" strokeWidth={1.75} />
+              <button 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="w-8 h-8 rounded-full bg-black/[0.05] dark:bg-white/[0.08] flex items-center justify-center text-[#8E8E93] hover:text-[#1C1C1E] dark:hover:text-white ios-press"
+              >
+                <X className="w-4 h-4" strokeWidth={2} />
               </button>
             </div>
-            <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto">
+            <nav className="flex-1 px-4 py-4 space-y-4 overflow-y-auto">
               {navGroups.map((group, gIdx) => {
                 const visibleItems = group.items.filter((item) => item.show);
                 if (visibleItems.length === 0) return null;
 
                 return (
                   <div key={gIdx} className="space-y-1">
-                    <div className="text-[10px] font-bold text-[#586862] dark:text-[#8FA89B] uppercase tracking-wider px-3 pb-1">
+                    <div className="text-[10px] font-semibold text-[#8E8E93] dark:text-[#98989D] uppercase tracking-wider px-3 pb-1">
                       {group.groupTitle}
                     </div>
                     {visibleItems.map((item) => {
@@ -319,13 +330,13 @@ export function AppLayout({
                           key={item.path}
                           to={item.path}
                           onClick={() => setMobileMenuOpen(false)}
-                          className={`flex items-center gap-3 px-3 py-2 rounded-[10px] text-sm font-medium transition-colors ${
+                          className={`flex items-center gap-3 px-3.5 py-3 rounded-2xl text-sm font-medium transition-colors ios-press ${
                             active
-                              ? 'bg-[#DCFCE7] dark:bg-[#15803D]/25 text-[#15803D] dark:text-[#4ADE80] font-semibold'
-                              : 'text-[#586862] dark:text-[#8FA89B] hover:bg-[#F0FDF4] dark:hover:bg-[#1A2A22] hover:text-[#15803D] dark:hover:text-[#4ADE80]'
+                              ? 'bg-[#059669] text-white font-semibold shadow-sm shadow-[#059669]/30'
+                              : 'text-[#8E8E93] dark:text-[#98989D] hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-[#1C1C1E] dark:hover:text-[#F5F5F7]'
                           }`}
                         >
-                          <Icon className="w-4 h-4 shrink-0" strokeWidth={1.75} />
+                          <Icon className="w-4 h-4 shrink-0" strokeWidth={active ? 2.2 : 1.75} />
                           <span>{item.label}</span>
                         </Link>
                       );
@@ -334,7 +345,7 @@ export function AppLayout({
                 );
               })}
             </nav>
-            <div className="p-4 border-t border-[#E3EAE5] dark:border-[#22332A] space-y-2">
+            <div className="p-4 border-t border-black/[0.05] dark:border-white/[0.06] space-y-2">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
@@ -342,13 +353,13 @@ export function AppLayout({
                   setPasswordSuccess('');
                   setChangePasswordOpen(true);
                 }}
-                className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-[10px] bg-[#F7FAF8] dark:bg-[#192821] border border-[#E3EAE5] dark:border-[#22332A] text-[#14201A] dark:text-[#EDF7F1] text-sm font-medium cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-2xl bg-black/[0.04] dark:bg-white/[0.06] text-[#1C1C1E] dark:text-[#F5F5F7] text-sm font-medium ios-press cursor-pointer"
               >
-                <KeyRound className="w-4 h-4 text-[#15803D] dark:text-[#4ADE80]" /> Ubah Kata Sandi
+                <KeyRound className="w-4 h-4 text-[#059669] dark:text-[#34D399]" /> Ubah Kata Sandi
               </button>
               <button
                 onClick={logout}
-                className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-[10px] bg-[#FEE2E2] dark:bg-[#DC2626]/20 text-[#DC2626] dark:text-[#F87171] text-sm font-medium cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-2xl bg-[#FF3B30]/10 text-[#FF3B30] text-sm font-semibold ios-press cursor-pointer"
               >
                 <LogOut className="w-4 h-4" /> Keluar
               </button>
@@ -358,185 +369,171 @@ export function AppLayout({
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 md:pl-64 flex flex-col min-w-0">
-        {/* Top Navbar */}
-        <header className="h-16 bg-white dark:bg-[#14201A] border-b border-[#E3EAE5] dark:border-[#22332A] px-4 sm:px-8 flex items-center justify-between sticky top-0 z-20 transition-colors duration-200">
-          <div className="flex items-center gap-3">
+      <div className="flex-1 md:pl-64 flex flex-col min-w-0 pb-20 md:pb-6">
+        {/* iOS Frosted Glass Top Header Bar */}
+        <header className="h-16 border-b border-black/[0.06] dark:border-white/[0.08] ios-glass sticky top-0 z-20 px-4 sm:px-8 flex items-center justify-between">
+          <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="p-1.5 rounded-[8px] border border-[#E3EAE5] dark:border-[#22332A] md:hidden text-[#586862] dark:text-[#8FA89B]"
+              className="md:hidden p-2 rounded-2xl bg-black/[0.05] dark:bg-white/[0.08] text-[#1C1C1E] dark:text-white ios-press"
+              aria-label="Buka Menu"
             >
-              <Menu className="w-5 h-5" strokeWidth={1.75} />
+              <Menu className="w-5 h-5" strokeWidth={2} />
             </button>
-
-            {/* Breadcrumbs */}
-            <div className="flex items-center gap-1.5 text-xs text-[#586862] dark:text-[#8FA89B]">
-              <Link to="/dashboard" className="hover:text-[#15803D] dark:hover:text-[#4ADE80] transition-colors">SIMSBH</Link>
-              {breadcrumbs.map((crumb, idx) => (
-                <React.Fragment key={idx}>
-                  <ChevronRight className="w-3.5 h-3.5 text-[#CBD5E1] dark:text-[#334D3F]" />
-                  <span className={idx === breadcrumbs.length - 1 ? 'font-medium text-[#14201A] dark:text-white' : ''}>
-                    {crumb}
-                  </span>
-                </React.Fragment>
-              ))}
+            <div className="min-w-0">
+              {breadcrumbs.length > 0 && (
+                <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#8E8E93] mb-0.5">
+                  <Link to="/dashboard" className="hover:text-[#059669] transition-colors">SIMSBH</Link>
+                  {breadcrumbs.map((b, idx) => (
+                    <React.Fragment key={idx}>
+                      <ChevronRight className="w-3 h-3 text-[#8E8E93]" />
+                      <span className={idx === breadcrumbs.length - 1 ? 'text-[#1C1C1E] dark:text-[#F5F5F7] font-medium' : ''}>
+                        {b}
+                      </span>
+                    </React.Fragment>
+                  ))}
+                </div>
+              )}
+              <h1 className="text-base sm:text-lg font-bold text-[#1C1C1E] dark:text-white tracking-tight truncate leading-tight">
+                {pageTitle || 'SIMSBH'}
+              </h1>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Operational Time Badge */}
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F7FAF8] dark:bg-[#192821] border border-[#E3EAE5] dark:border-[#22332A] text-xs text-[#586862] dark:text-[#8FA89B]">
-              <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
-              <Clock className="w-3.5 h-3.5 text-[#15803D] dark:text-[#4ADE80]" strokeWidth={1.75} />
-              <span>Zona WIT (Papua)</span>
-            </div>
-
-            {/* Ubah Password Button */}
-            <button
-              onClick={() => {
-                setPasswordError('');
-                setPasswordSuccess('');
-                setChangePasswordOpen(true);
-              }}
-              title="Ubah Kata Sandi Akun Saya"
-              className="flex items-center gap-1.5 px-2.5 py-2 rounded-[10px] border border-[#E3EAE5] dark:border-[#22332A] bg-[#F7FAF8] dark:bg-[#192821] text-xs font-semibold text-[#586862] dark:text-[#EDF7F1] hover:border-[#15803D] hover:text-[#15803D] dark:hover:text-[#4ADE80] transition-colors cursor-pointer"
-            >
-              <KeyRound className="w-3.5 h-3.5 text-[#15803D] dark:text-[#4ADE80]" strokeWidth={1.75} />
-              <span className="hidden lg:inline">Ganti Password</span>
-            </button>
-
-            {/* Theme Toggle Button */}
+          <div className="flex items-center gap-2 shrink-0">
+            {pageActions}
+            
+            {/* Theme Toggle Button (Light / Dark) */}
             <button
               onClick={toggleTheme}
+              className="p-2.5 rounded-full bg-black/[0.04] dark:bg-white/[0.08] text-[#8E8E93] hover:text-[#1C1C1E] dark:hover:text-white transition-all ios-press cursor-pointer"
               title={theme === 'dark' ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'}
-              className="p-2 rounded-[10px] border border-[#E3EAE5] dark:border-[#22332A] bg-[#F7FAF8] dark:bg-[#192821] text-[#586862] dark:text-[#EDF7F1] hover:border-[#15803D] transition-colors cursor-pointer"
             >
               {theme === 'dark' ? (
-                <Sun className="w-4 h-4 text-[#F59E0B]" strokeWidth={1.75} />
+                <Sun className="w-4 h-4 text-[#FF9500]" strokeWidth={2} />
               ) : (
-                <Moon className="w-4 h-4 text-[#586862]" strokeWidth={1.75} />
+                <Moon className="w-4 h-4 text-[#8E8E93]" strokeWidth={2} />
               )}
             </button>
-
-            {/* User Profile Badge */}
-            <div className="text-right hidden sm:block pl-2 border-l border-[#E3EAE5] dark:border-[#22332A]">
-              <p className="text-xs font-semibold text-[#14201A] dark:text-white">{user?.name}</p>
-              <p className="text-[11px] text-[#15803D] dark:text-[#4ADE80] font-medium">{user?.division || 'YSBH'}</p>
-            </div>
           </div>
         </header>
 
-        {/* Page Content with Standardized Clean Header */}
-        <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
-          {pageTitle && (
-            <div className="mb-6 pb-4 border-b border-[#E3EAE5] dark:border-[#22332A] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-[#14201A] dark:text-white tracking-tight">{pageTitle}</h2>
-                {pageSubtitle && (
-                  <p className="text-xs sm:text-sm text-[#586862] dark:text-[#8FA89B] mt-1">{pageSubtitle}</p>
-                )}
-              </div>
-              {pageActions && (
-                <div className="flex items-center gap-2.5 shrink-0">
-                  {pageActions}
-                </div>
-              )}
+        {/* Content Canvas (Full-Width Edge-to-Edge) */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 w-full min-w-0">
+          {pageSubtitle && (
+            <div className="mb-6">
+              <p className="text-xs sm:text-sm text-[#8E8E93] dark:text-[#98989D]">
+                {pageSubtitle}
+              </p>
             </div>
           )}
           {children}
         </main>
       </div>
 
-      {/* Modal Ubah Kata Sandi Akun */}
+      {/* iOS Mobile Bottom Navigation Bar (Tab Bar) */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/85 dark:bg-[#1C1C1E]/85 backdrop-blur-2xl border-t border-black/[0.06] dark:border-white/[0.08] px-2 py-1 flex items-center justify-around safe-area-bottom">
+        {mobileBottomItems.map((item, idx) => {
+          const active = location.pathname === item.path;
+          const Icon = item.icon;
+          
+          if (item.action) {
+            return (
+              <button
+                key={idx}
+                onClick={item.action}
+                className="flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl text-[#8E8E93] hover:text-[#059669] ios-press cursor-pointer"
+              >
+                <Icon className="w-5 h-5 mb-0.5" strokeWidth={1.75} />
+                <span className="text-[10px] font-medium leading-none">{item.label}</span>
+              </button>
+            );
+          }
+
+          return (
+            <Link
+              key={idx}
+              to={item.path}
+              className={`flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl transition-all ios-press ${
+                active 
+                  ? 'text-[#059669] dark:text-[#34D399] font-bold' 
+                  : 'text-[#8E8E93] hover:text-[#1C1C1E] dark:hover:text-white'
+              }`}
+            >
+              <Icon className="w-5 h-5 mb-0.5" strokeWidth={active ? 2.3 : 1.75} />
+              <span className="text-[10px] leading-none">{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Modal Ubah Kata Sandi */}
       <Modal
         isOpen={changePasswordOpen}
         onClose={() => setChangePasswordOpen(false)}
-        title="Ubah Kata Sandi Akun"
-        subtitle="Perbarui kata sandi Anda untuk memastikan keamanan akses sistem SIMSBH"
-        maxWidth="max-w-md"
+        title="Ubah Kata Sandi Saya"
+        subtitle="Masukkan kata sandi lama dan tentukan kata sandi baru Anda."
       >
         <form onSubmit={handleChangePassword} className="space-y-4">
           {passwordError && (
-            <div className="p-3 rounded-[8px] bg-[#FEE2E2] dark:bg-[#DC2626]/20 border border-[#FECACA] dark:border-[#DC2626]/40 text-xs text-[#DC2626] dark:text-[#F87171] flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{passwordError}</span>
+            <div className="p-3 rounded-2xl bg-[#FF3B30]/10 border border-[#FF3B30]/20 text-[#FF3B30] text-xs">
+              {passwordError}
             </div>
           )}
-
           {passwordSuccess && (
-            <div className="p-3 rounded-[8px] bg-[#DCFCE7] dark:bg-[#15803D]/25 border border-[#BBF7D0] dark:border-[#15803D]/40 text-xs text-[#15803D] dark:text-[#4ADE80] flex items-center gap-2">
+            <div className="p-3 rounded-2xl bg-[#34C759]/10 border border-[#34C759]/20 text-[#248A3D] dark:text-[#30D158] text-xs flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>{passwordSuccess}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1.5">
+            <label className="block text-xs font-semibold text-[#8E8E93] uppercase tracking-wider mb-1.5">
               Kata Sandi Saat Ini
             </label>
-            <div className="relative">
-              <input
-                type={showCurrentPass ? 'text' : 'password'}
-                required
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder="Masukkan kata sandi lama Anda"
-                className="w-full pr-10 pl-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-              />
-              <button
-                type="button"
-                onClick={() => setShowCurrentPass(!showCurrentPass)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#586862] dark:text-[#8FA89B] hover:text-[#14201A] dark:hover:text-white cursor-pointer"
-              >
-                {showCurrentPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
+            <input
+              type="password"
+              required
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full px-4 py-2.5 text-sm rounded-2xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.1] text-[#1C1C1E] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#059669]/30"
+            />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1.5">
+            <label className="block text-xs font-semibold text-[#8E8E93] uppercase tracking-wider mb-1.5">
               Kata Sandi Baru (Min. 6 Karakter)
             </label>
-            <div className="relative">
-              <input
-                type={showNewPass ? 'text' : 'password'}
-                required
-                minLength={6}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Masukkan kata sandi baru"
-                className="w-full pr-10 pl-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
-              />
-              <button
-                type="button"
-                onClick={() => setShowNewPass(!showNewPass)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#586862] dark:text-[#8FA89B] hover:text-[#14201A] dark:hover:text-white cursor-pointer"
-              >
-                {showNewPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
+            <input
+              type="password"
+              required
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full px-4 py-2.5 text-sm rounded-2xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.1] text-[#1C1C1E] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#059669]/30"
+            />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#14201A] dark:text-[#EDF7F1] mb-1.5">
+            <label className="block text-xs font-semibold text-[#8E8E93] uppercase tracking-wider mb-1.5">
               Konfirmasi Kata Sandi Baru
             </label>
             <input
               type="password"
               required
-              minLength={6}
               value={newPasswordConfirmation}
               onChange={(e) => setNewPasswordConfirmation(e.target.value)}
-              placeholder="Ulangi kata sandi baru"
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-[#192821] rounded-[10px] border border-[#E3EAE5] dark:border-[#2A3F33] text-[#14201A] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#15803D]/20 focus:border-[#15803D] dark:focus:border-[#22C55E]"
+              placeholder="••••••••"
+              className="w-full px-4 py-2.5 text-sm rounded-2xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.1] text-[#1C1C1E] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#059669]/30"
             />
           </div>
 
-          <div className="pt-2 flex justify-end gap-2.5">
+          <div className="flex justify-end gap-2.5 pt-4">
             <Button
-              type="button"
               variant="tertiary"
               onClick={() => setChangePasswordOpen(false)}
+              disabled={changePasswordLoading}
             >
               Batal
             </Button>
@@ -545,7 +542,7 @@ export function AppLayout({
               variant="primary"
               loading={changePasswordLoading}
             >
-              Simpan Kata Sandi Baru
+              Simpan Sandi Baru
             </Button>
           </div>
         </form>

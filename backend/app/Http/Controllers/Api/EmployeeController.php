@@ -135,9 +135,15 @@ class EmployeeController extends Controller
         ], 201);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
-        $employee = Employee::with(['user.roles', 'contracts', 'payrolls'])->findOrFail($id);
+        $relations = ['user.roles', 'contracts'];
+        // BR-01: Data gaji (payrolls) hanya boleh dimuat jika pengguna memiliki hak akses Direktur, Finance Manager, atau Superadmin
+        if ($request->user() && $request->user()->hasRole(['direktur', 'finance_manager', 'superadmin'])) {
+            $relations[] = 'payrolls';
+        }
+
+        $employee = Employee::with($relations)->findOrFail($id);
         return response()->json($employee);
     }
 

@@ -42,7 +42,8 @@ class EndToEndWorkflowTest extends TestCase
 
         $letterResponse->assertStatus(201);
         $letterData = $letterResponse->json('data');
-        $this->assertEquals('001/YSBH/HR/X/2026', $letterData['full_number']);
+        $romanMonth = \App\Services\LetterNumberService::romanMonth((int) date('n'));
+        $this->assertEquals("001/YSBH/HR/{$romanMonth}/2026", $letterData['full_number']);
         $this->assertEquals('reserved', $letterData['status']);
         $letterId = $letterData['id'];
 
